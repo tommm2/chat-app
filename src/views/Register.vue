@@ -128,14 +128,8 @@ export default {
     letter-spacing: 1px;
     text-align: center;
   }
-  .error-msg {
-    color: $error-color;
-    font-weight: 500;
-    font-size: $small-size;
-    letter-spacing: 1px;
-  }
   form {
-    max-width: 350px;
+    width: 330px;
     padding: 15px;
     margin-top: 50px;
     background-color: $primary-color;
@@ -156,6 +150,11 @@ export default {
         &:focus {
           outline: 0;
         }
+      }
+      .error-msg {
+        color: $error-color;
+        font-weight: 500;
+        font-size: $small-size;
       }
     }
     .login {

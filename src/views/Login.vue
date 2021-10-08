@@ -122,7 +122,7 @@ export default {
       text-align: center;
     }
     form {
-      max-width: 350px;
+      width: 330px;
       padding: 30px;
       border-radius: 10px;
       background-color: $primary-color;
