@@ -114,20 +114,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-$small-size: 14px;
-$large-size: 24px;
-$primay-color: #02C874;
-$primary-shadow: rgba(0, 233, 50, 0.822);
-$secondary-color: #313131;
-$sumbit-color: #4267B2;
-$text-white: #ffff;
-
 .register-container {
+  @include d-flex();
   overflow-y: hidden;
   height: inherit;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: $text-white;
   i {
     margin-right: 10px;
@@ -136,22 +126,19 @@ $text-white: #ffff;
     font-size: $large-size;
     margin-bottom: 10px;
     letter-spacing: 1px;
+    text-align: center;
   }
   .error-msg {
-    color: #DB4437;
+    color: $error-color;
     font-weight: 500;
     font-size: $small-size;
     letter-spacing: 1px;
   }
   form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     max-width: 350px;
     padding: 15px;
     margin-top: 50px;
-    background-color: $primay-color;
+    background-color: $primary-color;
     box-shadow: 1px 1px 10px $primary-shadow;
     border-radius: 10px;
     .form-group {
@@ -179,14 +166,14 @@ $text-white: #ffff;
       padding: 0.6rem 0.5rem;
       border-radius: 0.5rem;
       border: 0;
-      background-color: $sumbit-color;
+      background-color: $submit-color;
       color: $text-white;
       transition: all .3s ease-in-out;
       &:focus {
         outline: 0;
       }
       &:hover {
-        box-shadow: 1px 1px 10px $sumbit-color;
+        box-shadow: 1px 1px 10px $submit-color;
         transform: translateY(-1px);
       }
     }

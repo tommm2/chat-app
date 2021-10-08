@@ -109,11 +109,9 @@ export default {
 </script>
 <style lang="scss" scoped>
   .login-container {
+    @include d-flex();
     height: inherit;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
+    color: $text-white;
     i {
         margin-right: 10px;
       }
@@ -121,17 +119,14 @@ export default {
       font-size: 24px;
       margin-bottom: 20px;
       letter-spacing: 1px;
+      text-align: center;
     }
     form {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       max-width: 350px;
       padding: 30px;
-      background-color:#02C874;
-      box-shadow: 1px 1px 10px rgba(0, 233, 50, 0.822);
       border-radius: 10px;
+      background-color: $primary-color;
+      box-shadow: 1px 1px 10px $primary-shadow;
       .form-group {
         width: 100%;
         margin: 4px 0;
@@ -140,8 +135,8 @@ export default {
           border: 0;
           margin: 10px 0;
           padding: 0.8rem 0.5rem;
-          background-color: #313131;
-          color: #fff;
+          background-color: $secondary-color;
+          color: $text-white;
           box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.534);
           border-radius: 0.5rem;
           &:focus {
@@ -149,7 +144,7 @@ export default {
           }
         }
         .error-msg {
-          color: #DB4437;
+          color: $error-color;
           font-weight: 600;
           font-size: 14px;
           letter-spacing: 1px;
@@ -159,19 +154,19 @@ export default {
         width: 100%;
         text-align: center;
         a {
-          color: #fff;
+          color: $text-white;
           text-decoration: none;
         }
         .login {
           cursor: pointer;
-          letter-spacing: 1px;
           width: inherit;
           margin: 20px 0;
           padding: 0.6rem 0.5rem;
-          border-radius: 0.5rem;
           border: 0;
-          background-color:	#4267B2;
-          color: #fff;
+          border-radius: 0.5rem;
+          letter-spacing: 1px;
+          color: $text-white;
+          background-color:	$submit-color;
           transition: all .3s ease-in-out;
           &:focus {
             outline: 0;
@@ -188,9 +183,9 @@ export default {
           margin-top: 10px;
           .btn {
             cursor: pointer;
-            font-size: 35px;
             margin: 0 15px;
             border: 0;
+            font-size: 35px;
             background-color: transparent;
             transition: transform 3s ease-out;
             &:focus{
@@ -200,10 +195,10 @@ export default {
               animation: shock .3s ease-in-out;
             }
             &.facebook {
-              color: #4267B2;
+              color: $submit-color;
             }
             &.google {
-              color: #DB4437;
+              color: $error-color;
             }
             @keyframes shock {
               0% {

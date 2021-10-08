@@ -101,36 +101,31 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 .chat-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  @include d-flex($direction: column);
   height: inherit;
+  overflow: hidden;
   .chat-wrap {
-    max-width: 600px;
     width: 90%;
-    border: 4px solid #02C874;
+    max-width: 600px;
+    border: 4px solid $primary-color;
     border-radius: 10px;
-    box-shadow: 1px 1px 8px rgba(0, 233, 50, 0.822);
+    box-shadow: 1px 1px 8px $primary-shadow;
     background-color: inherit;
     .chat-header {
-      color: #fff;
+      @include d-flex($justify: space-between);
       width: 100%;
       padding: 10px;
-      background-color: #02C874;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: $text-white;
+      background-color: $primary-color;
       .info {
         display: flex;
         align-items: center;
         img { 
           width: 30px; 
           height: 30px; 
-          border-radius: 50%;
           margin-left: 10px;
+          border-radius: 50%;
         }
       }
     }
@@ -148,19 +143,19 @@ export default {
           border-radius: 50%;
         }
         span {
-          color: #fff;
           display: flex;
           font-size: 14px;
+          color: $text-white;
         }
         p {
           max-width: 200px;
           padding: 10px;
           border-radius: 10px;
-          background-color: #02C874;
           word-break: break-all;
+          background-color: $primary-color;
         }
         small {
-          color: #6C6C6C;
+          color: $text-mute;
         }
         &.send {
           flex-direction: row-reverse;
@@ -171,18 +166,17 @@ export default {
             margin-right: 10px;
           }
           small {
-            color: #6C6C6C;
             margin-right: 10px;
+            color: $text-mute;
           }
         }
         &.receive {
           p {
             margin-left: 10px;
+            color: $text-white;
             background-color: #272727;
-            color: #fff;
           }
           small {
-            color: #6C6C6C;
             margin-left: 10px;
           } 
           span {
@@ -194,8 +188,8 @@ export default {
         width: 0.4rem;
       }
       &::-webkit-scrollbar-thumb {
-        background: #02C874;
         border-radius: 10px;
+        background: $primary-color;
       }
       @media (max-width: 400px) {
         height: 330px;
@@ -205,16 +199,16 @@ export default {
       display: flex;
       width: 100%;
       padding: 20px;
-      border-top: 4px solid #02C874;
+      border-top: 4px solid $primary-color;
       input {
         width: 100%;
         padding: 5px 10px;
-        font-size: 16px;
-        color: #fff;
+        border: 2px solid $primary-color;
         border-radius: 30px;
-        border: 2px solid #02C874;
-        background-color: #4F4F4F;
+        font-size: 16px;
         word-break: break-all;
+        color: $text-white;
+        background-color: inherit;
         &:focus {
           outline: 0;
         }
@@ -222,9 +216,9 @@ export default {
       button {
         cursor: pointer;
         margin-left: 10px;
-        font-size: 16px;
         border: 0;
-        color: #02C874;
+        font-size: 16px;
+        color: $primary-color;
         background-color:transparent;
         transition: .3s all ease-in;
         &:hover {

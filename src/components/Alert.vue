@@ -37,16 +37,15 @@ i {
   top: 10%;
   right: 4%;
   .alert {
-    // width: 350px;
     padding: 10px 15px;
     border-radius: 5px;
-    color: #fff;
     text-align: center;
+    color: $text-white;
     &.error {
-      background-color: #DB4437;
+      background-color: $error-color;
     }
     &.success {
-      background-color: #4267B2;
+      background-color: $submit-color;
     }
   }
 }

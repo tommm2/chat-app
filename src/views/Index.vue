@@ -25,7 +25,7 @@ export default {
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
 .container {
-  overflow: hidden !important;
+  overflow: hidden;
   height: 100vh;
   background-color: #313131;
   font-family: 'Roboto', sans-serif;

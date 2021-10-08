@@ -64,19 +64,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 a {
-  color: #fff;
+  color: $text-white;
 }
+
 nav {
+  @include d-flex($justify: space-between);
   position: absolute;
   top: 0;
   z-index: 100;
   width: 100%;
   padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color:#02C874;
-  box-shadow: 2px 2px 10px rgba(0, 233, 50, 0.822);
+  background-color: $primary-color;
+  box-shadow: 2px 2px 10px $primary-shadow;
   .nav-logo {
     font-size: 24px;
     font-weight: 500;
@@ -89,8 +88,8 @@ nav {
       width: 25px;
       height: 3px;
       margin: 5px auto;
+      background-color: $text-white;
       transition: all .3s ease-in-out;
-      background-color: #fff;
     }
     @media (max-width: 768px) {
       cursor: pointer;
@@ -109,20 +108,18 @@ nav {
     }
   }
   .nav-menu {
+    @include d-flex($justify: space-between);
     list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     .nav-item {
       margin-left: 1rem;
       .nav-link {
         position: relative;
+        letter-spacing: 1px;
+        font-weight: 500;
         text-decoration: none;
         transition: color .3s ease-in-out;
-        font-weight: 500;
-        letter-spacing: 1px;
         &:hover {
-          color: #4267B2;
+          color: $submit-color;
         }
       }
     }
@@ -131,13 +128,13 @@ nav {
       right: -100%;
       top: 3.83rem;
       z-index: 100;
-      flex-direction: column;
-      background-color: #02C874;
       width: 100%;
-      text-align: center;
-      transition: 0.3s all ease-in-out;
+      flex-direction: column;
       box-shadow:
         0 10px 27px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      background-color: $primary-color;
+      transition: 0.3s all ease-in-out;
       .nav-item {
         margin: 10px 0;
       }
@@ -151,12 +148,12 @@ nav {
 
 // router-link active class
 .active {
-  color: #4267B2;
+  color: $submit-color;
   pointer-events: none;
 }
 
 .nav-logo {
-  color: #fff;
+  color: $text-white;
   text-decoration: none;
 }
 </style>
