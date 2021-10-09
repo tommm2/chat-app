@@ -105,7 +105,7 @@ export default {
   @include d-flex($direction: column);
   height: inherit;
   overflow: hidden;
-  margin-top: 50px;
+  margin-top: 30px;
   .chat-wrap {
     width: 90%;
     max-width: 600px;

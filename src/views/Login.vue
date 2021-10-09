@@ -147,7 +147,6 @@ export default {
           color: $error-color;
           font-weight: 600;
           font-size: 14px;
-          letter-spacing: 1px;
         }
       }
       .btn-group {
