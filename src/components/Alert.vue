@@ -8,22 +8,17 @@
   </div>
 </template>
 <script>
-import { ref, onMounted } from 'vue'
-import bus from '/@/bus.js'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
 export default {
   name: 'Alert',
   setup() {
-    const isShow = ref(false)
-    const message = ref('')
-    const style = ref('')
-    onMounted(() => {
-      bus.on('alert', (alert) => {
-        isShow.value = alert.isShow
-        message.value = alert.msg
-        style.value = alert.style
-      })
-    })
-   
+    const store = useStore()
+    const isShow = computed(() => store.state.alert.isShow)
+    const message = computed(() => store.state.alert.message)
+    const style = computed(() => store.state.alert.style)
+    
     return { isShow, message, style }
   }
 }

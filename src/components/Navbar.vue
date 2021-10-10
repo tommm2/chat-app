@@ -1,10 +1,14 @@
 <template>
   <nav class="navbar">
-    <router-link :to="{ name: 'Login' }" class="nav-logo">
+    <router-link 
+      :style="{ 'pointer-events': routeName !== '/chat' ? 'auto' : 'none' }" 
+      :to="{ name: 'Login' }" 
+      class="nav-logo"
+    >
       <i class="fas fa-sms"></i>
       Chat App
     </router-link>
-    <ul class="nav-menu" :class="{'show' : menuShow}">
+    <ul class="nav-menu" :class="{'show' : showMenu}">
       <li v-if="routeName !== '/chat'" class="nav-item">
         <router-link :to="{ name: 'Login' }"  class="nav-link">
           <i class="fas fa-sign-in-alt"></i>
@@ -17,7 +21,7 @@
           Logout
         </a>
       </li>
-      <li class="nav-item">
+      <li v-if="routeName !== '/chat'" class="nav-item">
         <router-link :to="{ name: 'Register' }"  class="nav-link">
           <i class="fas fa-user-plus"></i>
           Register
@@ -25,9 +29,9 @@
       </li>
     </ul>
     <div 
-      @click="menuShow = !menuShow" 
+      @click="$store.commit('UPDATE_MENU', !showMenu)" 
       class="hamburger" 
-      :class="{ 'show': menuShow }"
+      :class="{ 'show': showMenu }"
     >
       <span class="bar"></span>
       <span class="bar"></span>
@@ -36,29 +40,28 @@
   </nav>
 </template>
 <script>
-import bus from '/@/bus.js'
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth } from '/@/db.js'
+import { useStore } from 'vuex'
+import { auth, database } from '/@/db.js'
 
 export default {
   name: 'Navbar',
   setup() {
+    const store = useStore()
     const router = useRouter()
-    const menuShow = ref(false)
-    const routeName = ref('')
-
-    // logout
+    const showMenu = computed(() => store.state.showMenu)
+    const routeName = computed(() => store.state.routeName)
+    const uid = computed(() => store.state.uid)
+  
+    // Logout
     const logout = () => {
       auth.signOut()
+      database.ref(`presence/${uid.value}`).update({ online: false })
       router.push('/login')
     }
 
-    // Burger meun status(on or off)
-    bus.on('burger', status => menuShow.value = status)
-    bus.on('route', r => routeName.value = r)
-
-    return { menuShow, routeName, logout }
+    return { showMenu, routeName, logout }
   }
 }
 </script>

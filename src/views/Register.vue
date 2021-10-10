@@ -58,10 +58,9 @@
 </template>
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate'
-import { ref, reactive } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { auth } from '/@/db.js'
-import bus from '/@/bus.js'
+import { reactive } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Register',
@@ -71,44 +70,26 @@ export default {
     ErrorMessage,
   },
   setup() {
+    const store = useStore()
     const route = useRoute()
-    const router = useRouter()
     const form = reactive({
       username: '',
       email: '',
       password: '',
       confirm_password: '',
     })
-    const isSuccess = ref(false)
 
     // Sign up new user
-    const register = async () => {
-      try {
-        await auth.createUserWithEmailAndPassword(form.email, form.password)
-        await auth.currentUser.updateProfile({
-          displayName: form.username,
-          photoURL: 'https://i.postimg.cc/mrtfw2dd/anonymous.png',
-        })
-
-        await bus.emit('alert', { isShow: true, msg: '註冊成功，即將跳轉 !', style: 'success'});
-
-        await setTimeout(() => { 
-          bus.emit('alert', { isShow: false, msg: '', style: '' });
-          router.push('/login')
-        }, 1500);
-      } catch {
-        bus.emit('alert', { isShow: true, msg: '此帳號已被使用 !', style: 'error' });
-
-        setTimeout(() => {
-          bus.emit('alert', {isShow: false, msg: '', style: '' });
-        }, 2000);
-      }
+    const register = () => {
+      store.dispatch('register', form)
     }
-    bus.emit('route', route.path)
+
+    // Change Navbar.vue routeName
+    store.commit('UPDATE_ROUTE', route.path)
+    
     return { 
       register,
       form,
-      isSuccess,
     }
   }  
 }

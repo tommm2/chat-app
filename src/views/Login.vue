@@ -30,10 +30,10 @@
       <div class="btn-group">
         <button class="login" type="submit">Sign In</button>
         <div class="social-login">
-          <button @click.prevent="loginWithGoogle" class="btn google">
+          <button @click.prevent="threePartLogin" class="btn google">
             <i class="fab fa-google-plus"></i>
           </button>
-          <button @click.prevent="loginWithGoogle('facebook')" class="btn facebook">
+          <button @click.prevent="threePartLogin('facebook')" class="btn facebook">
             <i class="fab fa-facebook"></i>
           </button>
         </div>
@@ -42,12 +42,10 @@
   </div>
 </template>
 <script>
-import firebase from 'firebase/compat/app'
-import { auth } from '/@/db.js'
 import { reactive } from 'vue'
 import { Form, Field, ErrorMessage } from 'vee-validate'
-import { useRouter, useRoute } from 'vue-router'
-import bus from '/@/bus.js'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Login',
@@ -58,50 +56,27 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const router = useRouter()
+    const store = useStore()
     const form = reactive({
       email: '',
       password: '',
     })
 
     // Login with google or fb
-    const loginWithGoogle = async (social = 'Google') => {
-      let provider = new firebase.auth.GoogleAuthProvider()
-      if(social === 'facebook') {
-        provider = new firebase.auth.FacebookAuthProvider()
-      }
-
-      try {
-        await auth.signInWithPopup(provider)
-        await bus.emit('alert', { isShow: true, msg: '登入成功', style: 'success' });
-        await router.push('/chat')
-        await setTimeout(() => {
-          bus.emit('alert', { isShow: false, msg: '', style: '' });
-        }, 2000);
-      } catch {
-      }
+    const threePartLogin = (social = 'Google') => {
+      store.dispatch('threePartLogin', social)
     }
 
     // Login with email
-    const userLogin = async () => {
-      try {
-        await auth.signInWithEmailAndPassword(form.email, form.password)
-        await bus.emit('alert', { isShow: true, msg: '登入成功', style: 'success' });
-        await router.push('/chat')
-        await setTimeout(() => {
-          bus.emit('alert', { isShow: false, msg: '', style: '' });
-        }, 2000);
-      } catch {
-        bus.emit('alert', { isShow: true, msg: '查無此用戶', style: 'error' })
-        setTimeout(() => {
-          bus.emit('alert', { isShow: false, msg: '', style: '' });
-        }, 2000)
-      }
+    const userLogin = () => {
+      store.dispatch('userLogin', form)
     }
-    bus.emit('route', route.path)
+
+    // Change Navbar.vue routeName
+    store.commit('UPDATE_ROUTE', route.path)
     return { 
       form,
-      loginWithGoogle,
+      threePartLogin,
       userLogin,
     }
   },

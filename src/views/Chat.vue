@@ -4,8 +4,8 @@
       <div class="chat-header">
         <i class="fas fa-comment-dots"></i>
         <div class="info">
-          <span>Welcome, {{ user.displayName }}</span>
-          <img :src="user.photoURL" :alt="user.displayName">
+          <span>Welcome, {{ currentUser.displayName }}</span>
+          <img :src="currentUser.photoURL" :alt="currentUser.displayName">
         </div>
       </div>
       <div class="chat-box">
@@ -34,24 +34,43 @@
         </button>
       </form>
     </div>
+    <div class="user-wrap" :class="{ 'show': isShow }">
+      <h4><i class="fas fa-signal"></i>目前在線</h4>
+      <div class="user" v-for="(user, index) in onlineUser">
+        <img v-if="user.online" :src="user.photoUrl" :alt="user.displayName">
+        <span 
+          :title="user.user" 
+          class="username" 
+          v-if="user.online"
+        >
+          {{ user.user }}
+        </span>
+      </div>
+      <button @click="isShow = !isShow" class="toggle">
+        <i class="fas fa-chevron-right" :class="{ 'show': isShow }"></i>
+      </button>
+    </div>
   </div>
 </template>
 <script>
 import { ref } from 'vue'
-import { db, auth } from '/@/db.js'
-import bus from '/@/bus.js'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { auth, database } from '/@/db.js'
 
 export default {
   name: 'Chat',
   setup() {
+    const store = useStore()
     const route = useRoute()
     const message = ref('')
     const messages = ref([])
-    const user = ref(auth.currentUser)
+    const onlineUser = ref([])
+    const currentUser = ref(auth.currentUser)
+    const isShow = ref(false)
     const scroll = ref(null)
 
-    // time format
+    // Time format
     const timeFormat = () => {
       const date = new Date(Date.now());
       const options = {
@@ -62,40 +81,72 @@ export default {
       return date.toLocaleString('zh-TW', options)
     }
 
-    // send message 
+    // Send message 
     const sendMessage = () => {
       const userInfo = {
-        'userId': user.value.uid,
-        'displayName': user.value.displayName,
-        'photoUrl': user.value.photoURL,
+        'userId': currentUser.value.uid,
+        'displayName': currentUser.value.displayName,
+        'photoUrl': currentUser.value.photoURL,
         'message': message.value || null,
         'createAt': Date.now(),
         'timeFormat': timeFormat()
       }
-      
-      db.collection('messages').add(userInfo)
+      database.ref('/messages').push(userInfo)
       scroll.value.scrollIntoView({ behavior: 'smooth' })
       message.value = ''
     }
-
-    // sent or received
+  
+    // Sent or received
     const sentOrReceived = (uid) => {
-      return uid === user.value.uid ? 'send' : 'receive';
+      return uid === currentUser.value.uid ? 'send' : 'receive';
     }
     
-    // sort message with createAt
-    db.collection('messages').orderBy('createAt')
-      .onSnapshot((snapshot) => {
-        messages.value = snapshot.docs.map(doc => doc.data())
-      })
-    bus.emit('route', route.path)
+    // Get all message info
+    database.ref('/messages').on('value', (snapshot) => {
+      messages.value = snapshot.val()
+    })
+
+    // User presence
+    let presence = database.ref(`presence/${currentUser.value.uid}`)
+    let connect = database.ref('.info/connected')
+
+    connect.on('value', (snapshot) => {
+      if(snapshot.val()) {
+        let isOnline = {
+          user: currentUser.value.displayName,
+          online: true,
+          uid: currentUser.value.uid,
+          photoUrl: currentUser.value.photoURL,
+        }
+        let isOffline = {
+          user: currentUser.value.displayName,
+          online: false,
+          uid: currentUser.value.uid,
+          photoUrl: currentUser.value.photoURL,
+        }
+        presence.onDisconnect().set(isOffline).then(() => {
+          presence.set(isOnline)
+        })
+      }
+    })
+    database.ref('presence').on('value', (snapshot) => {
+      onlineUser.value = snapshot.val()
+    })
+    
+    // Change Navbar.vue routeName
+    store.commit('UPDATE_ROUTE', route.path)
+
+    // Change Navbar.vue uid
+    store.commit('UPDATE_UID', currentUser.value.uid)
     return {
       sendMessage, 
       message, 
-      user, 
+      currentUser, 
       messages, 
       sentOrReceived,
       scroll,
+      onlineUser,
+      isShow,
     }
   },
 }
@@ -185,13 +236,6 @@ export default {
           }
         }
       }
-      &::-webkit-scrollbar {
-        width: 0.4rem;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: $primary-color;
-      }
       @media (max-width: 400px) {
         height: 330px;
       }
@@ -242,6 +286,66 @@ export default {
       }
     }
   }
+  .user-wrap {
+    position: fixed;
+    background-color: $primary-color;
+    top: 20%;
+    left: 0;
+    height: 300px;
+    width: 200px;
+    padding: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 1px 1px 10px $primary-shadow;
+    color: $text-white;
+    transform: translateX(-200px);
+    transition: transform .5s ease-in-out;
+    .user {
+      display: flex;
+      align-items: center;
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+      .username {
+        margin: 10px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+    .toggle {
+      cursor: pointer;
+      position: absolute;
+      top: 40%;
+      right: -25px;
+      padding: 10px;
+      border: 0;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      color: $text-white;
+      box-shadow: 1px 1px 10px $primary-shadow;
+      background-color: $primary-color;
+      i {
+        transition: transform .5s ease-in-out;
+        &.show {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    &.show {
+      transform: translateX(0px);
+    }
+  }
 }
-  
+
+::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: $primary-color;
+}
 </style>
