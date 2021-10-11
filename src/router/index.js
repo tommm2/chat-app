@@ -32,6 +32,9 @@ const router = createRouter({
   linkActiveClass: 'active',
   history: createWebHashHistory(),
   routes,
+  scrollBehavior(to, from, savePosition) {
+    return { top: 0 }
+  }
 })
 
 export default router
