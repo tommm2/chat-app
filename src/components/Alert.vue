@@ -15,11 +15,12 @@ export default {
   name: 'Alert',
   setup() {
     const store = useStore()
-    const isShow = computed(() => store.state.alert.isShow)
-    const message = computed(() => store.state.alert.message)
-    const style = computed(() => store.state.alert.style)
     
-    return { isShow, message, style }
+    return { 
+      isShow: computed(() => store.state.alert.isShow), 
+      message: computed(() => store.state.alert.message), 
+      style: computed(() => store.state.alert.style),
+    }
   }
 }
 </script>

@@ -53,10 +53,10 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { auth, database } from '/@/db.js'
+import { auth } from '/@/db.js'
 
 export default {
   name: 'Chat',
@@ -64,8 +64,6 @@ export default {
     const store = useStore()
     const route = useRoute()
     const message = ref('')
-    const messages = ref([])
-    const onlineUser = ref([])
     const currentUser = ref(auth.currentUser)
     const isShow = ref(false)
     const scroll = ref(null)
@@ -91,7 +89,8 @@ export default {
         'createAt': Date.now(),
         'timeFormat': timeFormat()
       }
-      database.ref('/messages').push(userInfo)
+
+      store.dispatch('pushMessage', userInfo)
       scroll.value.scrollIntoView({ behavior: 'smooth' })
       message.value = ''
     }
@@ -102,51 +101,25 @@ export default {
     }
     
     // Get all message info
-    database.ref('/messages').on('value', (snapshot) => {
-      messages.value = snapshot.val()
-    })
+    store.dispatch('getMessage')
 
-    // User presence
-    let presence = database.ref(`presence/${currentUser.value.uid}`)
-    let connect = database.ref('.info/connected')
+    // Show user presence
+    store.dispatch('userPresence', currentUser.value)
 
-    connect.on('value', (snapshot) => {
-      if(snapshot.val()) {
-        let isOnline = {
-          user: currentUser.value.displayName,
-          online: true,
-          uid: currentUser.value.uid,
-          photoUrl: currentUser.value.photoURL,
-        }
-        let isOffline = {
-          user: currentUser.value.displayName,
-          online: false,
-          uid: currentUser.value.uid,
-          photoUrl: currentUser.value.photoURL,
-        }
-        presence.onDisconnect().set(isOffline).then(() => {
-          presence.set(isOnline)
-        })
-      }
-    })
-    database.ref('presence').on('value', (snapshot) => {
-      onlineUser.value = snapshot.val()
-    })
-    
     // Change Navbar.vue routeName
     store.commit('UPDATE_ROUTE', route.path)
 
     // Change Navbar.vue uid
     store.commit('UPDATE_UID', currentUser.value.uid)
     return {
-      sendMessage, 
-      message, 
-      currentUser, 
-      messages, 
-      sentOrReceived,
-      scroll,
-      onlineUser,
       isShow,
+      scroll,
+      message, 
+      sendMessage, 
+      sentOrReceived,
+      currentUser, 
+      messages: computed(() => store.state.messages), 
+      onlineUser: computed(() => store.state.onlineUser),
     }
   },
 }

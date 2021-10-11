@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import router from '/@/router'
-import { auth } from '/@/db.js'
+import { auth, database } from '/@/db.js'
 import firebase from 'firebase/compat/app'
 
 import alert from './modules/alert'
@@ -8,9 +8,11 @@ import alert from './modules/alert'
 const store = createStore({
   strict: true,
   state: () => ({
+    uid: '',
     routeName: '',
     showMenu: false,
-    uid: '',
+    onlineUser: [],
+    messages: [],
   }),
   mutations: {
     UPDATE_ROUTE(state, payload) {
@@ -21,6 +23,12 @@ const store = createStore({
     },
     UPDATE_MENU(state, payload) {
       state.showMenu = payload
+    },
+    UPDATE_ONLINE_USER(state, payload) {
+      state.onlineUser = payload
+    },
+    UPDATE_CHAT_MSG(state, payload) {
+      state.messages = payload
     }
   },
   actions: {
@@ -106,7 +114,44 @@ const store = createStore({
         })
       }
     },
+    pushMessage({ commit }, payload) {
+      database.ref('/messages').push(payload)
+    },
+    getMessage({ commit }, payload) {
+      database.ref('/messages').on('value', (snapshot) => {
+        commit('UPDATE_CHAT_MSG', snapshot.val()) 
+      })
+    },
+    userPresence({ commit }, payload) {
+      const { uid, displayName, photoURL } = payload
 
+      let presence = database.ref(`presence/${uid}`)
+      let connect = database.ref('.info/connected')
+
+      connect.on('value', (snapshot) => {
+        if(snapshot.val()) {
+          let isOnline = {
+            user: displayName,
+            online: true,
+            uid: uid,
+            photoUrl: photoURL,
+          }
+          let isOffline = {
+            user: displayName,
+            online: false,
+            uid: uid,
+            photoUrl: photoURL,
+          }
+          presence.onDisconnect().set(isOffline).then(() => {
+            presence.set(isOnline)
+          })
+        }
+      })
+
+      database.ref('presence').on('value', (snapshot) => {
+        commit('UPDATE_ONLINE_USER', snapshot.val())
+      })
+    }
   },
   modules: {
     alert
