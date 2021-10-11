@@ -32,7 +32,7 @@ const store = createStore({
           displayName: username,
           photoURL: 'https://i.postimg.cc/mrtfw2dd/anonymous.png',
         })
-        await commit('SHOW_MSG', { 
+        await commit('UPDATE_MSG', { 
           isShow: true,
           msg: '註冊成功!', 
           style: 'success'
@@ -45,7 +45,7 @@ const store = createStore({
         })
        
       } catch(err) {
-        commit('SHOW_MSG', { 
+        commit('UPDATE_MSG', { 
           isShow: true, 
           msg: '此帳號已被使用', 
           style: 'error',
@@ -65,7 +65,7 @@ const store = createStore({
 
       try {
         await auth.signInWithPopup(provider)
-        await commit('SHOW_MSG', { 
+        await commit('UPDATE_MSG', { 
           isShow: true,
           msg: '登入成功', 
           style: 'success' 
@@ -82,7 +82,7 @@ const store = createStore({
       const { email, password }  = payload 
       try {
         await auth.signInWithEmailAndPassword(email, password)
-        await commit('SHOW_MSG', { 
+        await commit('UPDATE_MSG', { 
           isShow: true,
           msg: '登入成功', 
           style: 'success' 
@@ -94,7 +94,7 @@ const store = createStore({
           style: '' 
         })
       } catch {
-        commit('SHOW_MSG', { 
+        commit('UPDATE_MSG', { 
           isShow: true,
           msg: '查無此用戶', 
           style: 'error',

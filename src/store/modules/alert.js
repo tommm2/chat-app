@@ -5,21 +5,16 @@ export default {
     style: '',
   }),
   mutations: {
-    SHOW_MSG(state, payload) {
+    UPDATE_MSG(state, payload) {
       state.isShow = payload.isShow
       state.message = payload.msg
       state.style = payload.style
     },
-    REMOVE_MSG(state, payload) {
-      state.isShow = payload.isShow
-      state.message = payload.msg
-      state.style = payload.style
-    }
   },
   actions: {
     removeMsg({ commit }, payload) {
       setTimeout(() => {
-        commit('REMOVE_MSG', payload)
+        commit('UPDATE_MSG', payload)
       }, 1500)
     }
   }
