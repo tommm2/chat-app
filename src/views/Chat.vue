@@ -298,8 +298,8 @@ export default {
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
       color: $text-white;
-      box-shadow: 1px 1px 10px $primary-shadow;
-      background-color: $primary-color;
+      box-shadow: 3.8px 1px 10px $primary-shadow;
+      background-color: inherit;
       i {
         transition: transform .5s ease-in-out;
         &.show {
