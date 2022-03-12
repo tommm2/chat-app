@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Navbar></Navbar>
+    <Navbar />
     <router-view v-slot="{ Component }">
       <transition name="slide" appear>
         <component :is="Component" />
@@ -11,24 +11,17 @@
     </transition>
   </div>
 </template>
-<script>
-import Navbar from '/@/components/Navbar.vue'
-import Alert from '/@/components/Alert.vue'
-export default {
-  name: 'Index',
-  components: {
-    Navbar,
-    Alert
-  },
-}
+<script setup>
+import Navbar from "/@/components/Navbar.vue";
+import Alert from "/@/components/Alert.vue";
 </script>
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
 .container {
   overflow: hidden;
   height: 100vh;
   background-color: #313131;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 // transition

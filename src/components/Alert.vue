@@ -8,21 +8,21 @@
   </div>
 </template>
 <script>
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
-  name: 'Alert',
+  name: "Alert",
   setup() {
-    const store = useStore()
-    
-    return { 
-      isShow: computed(() => store.state.alert.isShow), 
-      message: computed(() => store.state.alert.message), 
+    const store = useStore();
+
+    return {
+      isShow: computed(() => store.state.alert.isShow),
+      message: computed(() => store.state.alert.message),
       style: computed(() => store.state.alert.style),
-    }
-  }
-}
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 i {

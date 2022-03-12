@@ -1,69 +1,69 @@
 <template>
   <nav class="navbar">
-    <router-link 
-      :style="{ 'pointer-events': routeName !== '/chat' ? 'auto' : 'none' }" 
-      :to="{ name: 'Login' }" 
+    <router-link
+      :style="{ 'pointer-events': routeName !== '/chat' ? 'auto' : 'none' }"
+      :to="{ name: 'Login' }"
       class="nav-logo"
     >
       <i class="fas fa-sms"></i>
       Chat App
     </router-link>
-    <ul class="nav-menu" :class="{'show' : showMenu}">
+    <ul class="nav-menu" :class="{ show: showMenu }">
       <li v-if="routeName !== '/chat'" class="nav-item">
-        <router-link :to="{ name: 'Login' }"  class="nav-link">
+        <router-link :to="{ name: 'Login' }" class="nav-link">
           <i class="fas fa-sign-in-alt"></i>
           Login
         </router-link>
       </li>
       <li v-if="routeName === '/chat'" class="nav-item">
-        <a @click="logout" href="#"  class="nav-link">
+        <a @click="logout" href="#" class="nav-link">
           <i class="fas fa-sign-out-alt"></i>
           Logout
         </a>
       </li>
       <li v-if="routeName !== '/chat'" class="nav-item">
-        <router-link :to="{ name: 'Register' }"  class="nav-link">
+        <router-link :to="{ name: 'Register' }" class="nav-link">
           <i class="fas fa-user-plus"></i>
           Register
         </router-link>
       </li>
     </ul>
-    <div 
-      @click="$store.commit('UPDATE_MENU', !showMenu)" 
-      class="hamburger" 
-      :class="{ 'show': showMenu }"
+    <div
+      @click="$store.commit('UPDATE_MENU', !showMenu)"
+      class="hamburger"
+      :class="{ show: showMenu }"
     >
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
-   </div>
+    </div>
   </nav>
 </template>
 <script>
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { auth, database } from '/@/db.js'
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { auth, database } from "/@/db.js";
 
 export default {
-  name: 'Navbar',
+  name: "Navbar",
   setup() {
-    const store = useStore()
-    const router = useRouter()
-    const showMenu = computed(() => store.state.showMenu)
-    const routeName = computed(() => store.state.routeName)
-    const uid = computed(() => store.state.uid)
-  
+    const store = useStore();
+    const router = useRouter();
+    const showMenu = computed(() => store.state.showMenu);
+    const routeName = computed(() => store.state.routeName);
+    const uid = computed(() => store.state.uid);
+
     // Logout
     const logout = () => {
-      auth.signOut()
-      database.ref(`presence/${uid.value}`).update({ online: false })
-      router.push('/login')
-    }
+      auth.signOut();
+      database.ref(`presence/${uid.value}`).update({ online: false });
+      router.push("/login");
+    };
 
-    return { showMenu, routeName, logout }
-  }
-}
+    return { showMenu, routeName, logout };
+  },
+};
 </script>
 <style lang="scss" scoped>
 a {
@@ -92,7 +92,7 @@ nav {
       height: 3px;
       margin: 5px auto;
       background-color: $text-white;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
     }
     @media (max-width: 768px) {
       cursor: pointer;
@@ -120,7 +120,7 @@ nav {
         letter-spacing: 1px;
         font-weight: 500;
         text-decoration: none;
-        transition: color .3s ease-in-out;
+        transition: color 0.3s ease-in-out;
         &:hover {
           color: $submit-color;
         }
@@ -133,8 +133,7 @@ nav {
       z-index: 100;
       width: 100%;
       flex-direction: column;
-      box-shadow:
-        0 10px 27px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
       text-align: center;
       background-color: $primary-color;
       transition: 0.3s all ease-in-out;

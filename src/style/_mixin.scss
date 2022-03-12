@@ -1,4 +1,9 @@
-@mixin d-flex($display: flex, $direction: null, $justify: center, $align: center) {
+@mixin d-flex(
+  $display: flex,
+  $direction: null,
+  $justify: center,
+  $align: center
+) {
   display: $display;
   flex-direction: $direction;
   justify-content: $justify;

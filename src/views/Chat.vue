@@ -5,7 +5,7 @@
         <i class="fas fa-comment-dots"></i>
         <div class="info">
           <span>Welcome, {{ currentUser.displayName }}</span>
-          <img :src="currentUser.photoURL" :alt="currentUser.displayName">
+          <img :src="currentUser.photoURL" :alt="currentUser.displayName" />
         </div>
       </div>
       <div class="chat-box">
@@ -14,7 +14,7 @@
           :class="['chat-msg', sentOrReceived(msg.userId)]"
           :key="index"
         >
-          <img :src="msg.photoUrl" :alt="msg.displayName">
+          <img :src="msg.photoUrl" :alt="msg.displayName" />
           <div>
             <span>{{ msg.displayName }}</span>
             <p>{{ msg.message }}</p>
@@ -24,105 +24,88 @@
         <div ref="scroll"></div>
       </div>
       <form @submit.prevent="sendMessage">
-        <input 
-          v-model="message" 
-          class="input-msg" 
+        <input
+          v-model="message"
+          class="input-msg"
           placeholder="Enter message..."
-        >
+        />
         <button :disabled="!message" type="submit" title="send!">
           <i class="fas fa-paper-plane"></i>
         </button>
       </form>
     </div>
-    <div class="user-wrap" :class="{ 'show': isShow }">
+    <div class="user-wrap" :class="{ show: isShow }">
       <h4><i class="fas fa-signal"></i>目前在線</h4>
-      <div class="user" v-for="(user, index) in onlineUser">
-        <img v-if="user.online" :src="user.photoUrl" :alt="user.displayName">
-        <span 
-          :title="user.user" 
-          class="username" 
-          v-if="user.online"
-        >
+      <div class="user" v-for="user in onlineUser">
+        <img v-if="user.online" :src="user.photoUrl" :alt="user.displayName" />
+        <span :title="user.user" class="username" v-if="user.online">
           {{ user.user }}
         </span>
       </div>
       <button @click="isShow = !isShow" class="toggle">
-        <i class="fas fa-chevron-right" :class="{ 'show': isShow }"></i>
+        <i class="fas fa-chevron-right" :class="{ show: isShow }"></i>
       </button>
     </div>
   </div>
 </template>
-<script>
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import { auth } from '/@/db.js'
+<script setup>
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { auth } from "/@/db.js";
 
-export default {
-  name: 'Chat',
-  setup() {
-    const store = useStore()
-    const route = useRoute()
-    const message = ref('')
-    const currentUser = ref(auth.currentUser)
-    const isShow = ref(false)
-    const scroll = ref(null)
+const store = useStore();
+const route = useRoute();
+const message = ref("");
+const currentUser = ref(auth.currentUser);
+const isShow = ref(false);
+const scroll = ref(null);
+const messages = computed(() => store.state.messages);
+const onlineUser = computed(() => store.state.onlineUser);
 
-    // Time format
-    const timeFormat = () => {
-      const date = new Date(Date.now());
-      const options = {
-        hour: '2-digit',
-        minute: '2-digit',
-      }
+// Time format
+const timeFormat = () => {
+  const date = new Date(Date.now());
+  const options = {
+    hour: "2-digit",
+    minute: "2-digit",
+  };
 
-      return date.toLocaleString('zh-TW', options)
-    }
+  return date.toLocaleString("zh-TW", options);
+};
 
-    // Send message 
-    const sendMessage = () => {
-      const userInfo = {
-        'userId': currentUser.value.uid,
-        'displayName': currentUser.value.displayName,
-        'photoUrl': currentUser.value.photoURL,
-        'message': message.value || null,
-        'createAt': Date.now(),
-        'timeFormat': timeFormat()
-      }
+// Send message
+const sendMessage = () => {
+  const userInfo = {
+    userId: currentUser.value.uid,
+    displayName: currentUser.value.displayName,
+    photoUrl: currentUser.value.photoURL,
+    message: message.value || null,
+    createAt: Date.now(),
+    timeFormat: timeFormat(),
+  };
 
-      store.dispatch('pushMessage', userInfo)
-      scroll.value.scrollIntoView({ behavior: 'smooth' })
-      message.value = ''
-    }
-  
-    // Sent or received
-    const sentOrReceived = (uid) => {
-      return uid === currentUser.value.uid ? 'send' : 'receive';
-    }
-    
-    // Get all message info
-    store.dispatch('getMessage')
+  store.dispatch("pushMessage", userInfo);
+  scroll.value.scrollIntoView({ behavior: "smooth" });
+  message.value = "";
+};
 
-    // Show user presence
-    store.dispatch('userPresence', currentUser.value)
+// Sent or received
+const sentOrReceived = (uid) => {
+  return uid === currentUser.value.uid ? "send" : "receive";
+};
 
-    // Change Navbar.vue routeName
-    store.commit('UPDATE_ROUTE', route.path)
+// Get all message info
+store.dispatch("getMessage");
 
-    // Change Navbar.vue uid
-    store.commit('UPDATE_UID', currentUser.value.uid)
-    return {
-      isShow,
-      scroll,
-      message, 
-      sendMessage, 
-      sentOrReceived,
-      currentUser, 
-      messages: computed(() => store.state.messages), 
-      onlineUser: computed(() => store.state.onlineUser),
-    }
-  },
-}
+// Show user presence
+store.dispatch("userPresence", currentUser.value);
+
+// Change Navbar.vue routeName
+store.commit("UPDATE_ROUTE", route.path);
+
+// Change Navbar.vue uid
+store.commit("UPDATE_UID", currentUser.value.uid);
 </script>
 <style lang="scss" scoped>
 .chat-container {
@@ -146,9 +129,9 @@ export default {
       .info {
         display: flex;
         align-items: center;
-        img { 
-          width: 30px; 
-          height: 30px; 
+        img {
+          width: 30px;
+          height: 30px;
           margin-left: 10px;
           border-radius: 50%;
         }
@@ -203,7 +186,7 @@ export default {
           }
           small {
             margin-left: 10px;
-          } 
+          }
           span {
             margin: 0 0 3px 10px;
           }
@@ -237,10 +220,10 @@ export default {
         border: 0;
         font-size: 16px;
         color: $primary-color;
-        background-color:transparent;
-        transition: .3s all ease-in;
+        background-color: transparent;
+        transition: 0.3s all ease-in;
         &:hover {
-          animation: shock .3s ease-in-out;
+          animation: shock 0.3s ease-in-out;
         }
         @keyframes shock {
           0% {
@@ -272,7 +255,7 @@ export default {
     box-shadow: 1px 1px 10px $primary-shadow;
     color: $text-white;
     transform: translateX(-200px);
-    transition: transform .5s ease-in-out;
+    transition: transform 0.5s ease-in-out;
     .user {
       display: flex;
       align-items: center;
@@ -301,7 +284,7 @@ export default {
       box-shadow: 3.8px 1px 10px $primary-shadow;
       background-color: inherit;
       i {
-        transition: transform .5s ease-in-out;
+        transition: transform 0.5s ease-in-out;
         &.show {
           transform: rotate(180deg);
         }

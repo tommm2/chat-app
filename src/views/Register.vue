@@ -10,7 +10,7 @@
           name="username"
           placeholder="Enter username..."
           v-model="form.username"
-          rules="username"          
+          rules="username"
         />
         <ErrorMessage class="error-msg" name="username" />
       </div>
@@ -22,25 +22,27 @@
           name="email"
           placeholder="Enter email..."
           v-model="form.email"
-          rules="email"          
+          rules="email"
         />
         <ErrorMessage class="error-msg" name="email" />
       </div>
       <div class="form-group">
-      <label for="password"><i class="fas fa-lock"></i>Password</label>
-      <Field
-        id="passowrd"
-        type="password"
-        name="password"
-        placeholder="Enter password..."
-        v-model="form.password"
-        rules="password"
-        autocomplete="password"
-      />
-      <ErrorMessage class="error-msg" name="password" />
+        <label for="password"><i class="fas fa-lock"></i>Password</label>
+        <Field
+          id="passowrd"
+          type="password"
+          name="password"
+          placeholder="Enter password..."
+          v-model="form.password"
+          rules="password"
+          autocomplete="password"
+        />
+        <ErrorMessage class="error-msg" name="password" />
       </div>
       <div class="form-group">
-        <label for="confirm_password"><i class="fas fa-check"></i>Confirm</label>
+        <label for="confirm_password"
+          ><i class="fas fa-check"></i>Confirm</label
+        >
         <Field
           id="confirm_password"
           type="password"
@@ -56,43 +58,28 @@
     </Form>
   </div>
 </template>
-<script>
-import { Form, Field, ErrorMessage } from 'vee-validate'
-import { reactive } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+<script setup>
+import { Form, Field, ErrorMessage } from "vee-validate";
+import { reactive } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
-export default {
-  name: 'Register',
-  components: {
-    Form,
-    Field,
-    ErrorMessage,
-  },
-  setup() {
-    const store = useStore()
-    const route = useRoute()
-    const form = reactive({
-      username: '',
-      email: '',
-      password: '',
-      confirm_password: '',
-    })
+const store = useStore();
+const route = useRoute();
+const form = reactive({
+  username: "",
+  email: "",
+  password: "",
+  confirm_password: "",
+});
 
-    // Sign up new user
-    const register = () => {
-      store.dispatch('register', form)
-    }
+// Sign up new user
+const register = () => {
+  store.dispatch("register", form);
+};
 
-    // Change Navbar.vue routeName
-    store.commit('UPDATE_ROUTE', route.path)
-    
-    return { 
-      register,
-      form,
-    }
-  }  
-}
+// Change Navbar.vue routeName
+store.commit("UPDATE_ROUTE", route.path);
 </script>
 <style lang="scss" scoped>
 .register-container {
@@ -148,7 +135,7 @@ export default {
       border: 0;
       background-color: $submit-color;
       color: $text-white;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
       &:focus {
         outline: 0;
       }
@@ -159,6 +146,4 @@ export default {
     }
   }
 }
-
-
 </style>
