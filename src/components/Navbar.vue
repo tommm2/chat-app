@@ -39,30 +39,23 @@
     </div>
   </nav>
 </template>
-<script>
+<script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { auth, database } from "/@/db.js";
 
-export default {
-  name: "Navbar",
-  setup() {
-    const store = useStore();
-    const router = useRouter();
-    const showMenu = computed(() => store.state.showMenu);
-    const routeName = computed(() => store.state.routeName);
-    const uid = computed(() => store.state.uid);
+const store = useStore();
+const router = useRouter();
+const showMenu = computed(() => store.state.showMenu);
+const routeName = computed(() => store.state.routeName);
+const uid = computed(() => store.state.uid);
 
-    // Logout
-    const logout = () => {
-      auth.signOut();
-      database.ref(`presence/${uid.value}`).update({ online: false });
-      router.push("/login");
-    };
-
-    return { showMenu, routeName, logout };
-  },
+// Logout
+const logout = () => {
+  auth.signOut();
+  database.ref(`presence/${uid.value}`).update({ online: false });
+  router.push("/login");
 };
 </script>
 <style lang="scss" scoped>

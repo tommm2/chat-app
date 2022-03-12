@@ -7,22 +7,14 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { computed } from "vue";
 import { useStore } from "vuex";
 
-export default {
-  name: "Alert",
-  setup() {
-    const store = useStore();
-
-    return {
-      isShow: computed(() => store.state.alert.isShow),
-      message: computed(() => store.state.alert.message),
-      style: computed(() => store.state.alert.style),
-    };
-  },
-};
+const store = useStore();
+const isShow = computed(() => store.state.alert.isShow);
+const message = computed(() => store.state.alert.message);
+const style = computed(() => store.state.alert.style);
 </script>
 <style lang="scss" scoped>
 i {
