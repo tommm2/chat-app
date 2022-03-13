@@ -2,31 +2,23 @@
   <div class="login-container">
     <Form @submit="userLogin">
       <h3><i class="fas fa-user"></i>Login</h3>
-      <div class="form-group">
-        <label for="email"><i class="fas fa-envelope"></i>Email</label>
-        <Field
-          id="email"
-          type="email"
-          name="email"
-          placeholder="Enter email..."
-          v-model="form.email"
-          rules="email"
-        />
-        <ErrorMessage class="error-msg" name="email" />
-      </div>
-      <div class="form-group">
-        <label for="password"><i class="fas fa-lock"></i>Password</label>
-        <Field
-          id="passowrd"
-          type="password"
-          name="password"
-          placeholder="Enter password..."
-          v-model="form.password"
-          rules="password"
-          autocomplete="password"
-        />
-        <ErrorMessage class="error-msg" name="password" />
-      </div>
+      <CustomInput
+        name="email"
+        type="email"
+        icon="fas fa-envelope"
+        placeholder="Enter email..."
+        v-model:input-value="form.email"
+        rules="email"
+      />
+      <CustomInput
+        name="password"
+        type="password"
+        rules="password"
+        autocomplete="password"
+        placeholder="Enter password..."
+        icon="fas fa-lock"
+        v-model:input-value="form.password"
+      />
       <div class="btn-group">
         <button class="login" type="submit">Sign In</button>
         <div class="social-login">
@@ -45,8 +37,10 @@
   </div>
 </template>
 <script setup>
+import { Form } from "vee-validate";
+import CustomInput from "/@/components/CustomInput.vue";
+
 import { reactive } from "vue";
-import { Form, Field, ErrorMessage } from "vee-validate";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -69,7 +63,6 @@ const userLogin = () => {
 
 // Change Navbar.vue routeName
 store.commit("UPDATE_ROUTE", route.path);
-
 </script>
 <style lang="scss" scoped>
 .login-container {
