@@ -6,15 +6,14 @@ import "firebase/compat/auth";
 
 // firebase SDK
 const firebaseConfig = {
-  apiKey: "AIzaSyCSei4bGBnDPGw3vOMuTPeR1mg4Qq5UopA",
-  authDomain: "vue-chat-app-e373f.firebaseapp.com",
-  projectId: "vue-chat-app-e373f",
-  databaseURL:
-    "https://vue-chat-app-e373f-default-rtdb.asia-southeast1.firebasedatabase.app",
-  storageBucket: "vue-chat-app-e373f.appspot.com",
-  messagingSenderId: "191258709366",
-  appId: "1:191258709366:web:1007e9d9633ff375937e57",
-  measurementId: "G-D5D6P8N5Y1",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 export const database = firebase.initializeApp(firebaseConfig).database();
